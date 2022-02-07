@@ -34,9 +34,9 @@ git submodule update --init --recursive",
         .no_build_target(true);
 
 
-    cfg.cflag(&format!("-ffile-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
+    cfg.cflag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
        .cflag(&format!("-fmacro-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
-       .cxxflag(&format!("-ffile-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
+       .cxxflag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
        .cxxflag(&format!("-fmacro-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()));
 
     let target_os = env::var("CARGO_CFG_TARGET_OS").expect("Can't get the target OS!");
@@ -98,7 +98,7 @@ git submodule update --init --recursive",
         .warnings(false)
         .cpp(true)
         .flag("-std=c++11")
-        .flag(&format!("-ffile-prefix-map={}=/wabt-sys/out", dst.display()))
+        .flag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", dst.display()))
         .compile("wabt_shim");
 }
 
