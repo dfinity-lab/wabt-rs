@@ -34,10 +34,12 @@ git submodule update --init --recursive",
         .no_build_target(true);
 
 
+    if cfg!(target_os = "linux") {
     cfg.cflag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
        .cflag(&format!("-fmacro-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
        .cxxflag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()))
        .cxxflag(&format!("-fmacro-prefix-map={}=/wabt-sys/out", std::env::var("OUT_DIR").unwrap()));
+    }
 
     let target_os = env::var("CARGO_CFG_TARGET_OS").expect("Can't get the target OS!");
     if target_os == "android" {
@@ -97,9 +99,11 @@ git submodule update --init --recursive",
         .cpp_link_stdlib(None)
         .warnings(false)
         .cpp(true)
-        .flag("-std=c++11")
-        .flag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", dst.display()))
-        .compile("wabt_shim");
+        .flag("-std=c++11");
+    if cfg!(target_os = "linux") {
+        cfg.flag(&format!("-fdebug-prefix-map={}=/wabt-sys/out", dst.display()));
+    }
+    cfg.compile("wabt_shim");
 }
 
 /// Returns the C++ stdlib to link against specified by an environment variable. If the env vars
